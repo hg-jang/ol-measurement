@@ -6,10 +6,10 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/hg-jang/ol-measurement"
   },
   "bugs": {
-    "url": ""
+    "url": "https://github.com/hg-jang/ol-measurement/issues"
   },
   "scripts": {
     "rollup": "rollup -c ./rollup.config.js",
