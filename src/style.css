@@ -1,0 +1,10 @@
+.ol-measurement {
+  top: 2.375em;
+  right: 0.5em;
+}
+.ol-measurement .ol-measurement-distance {
+  /* border-radius: 2px 2px 0 0; */
+}
+.ol-measurement .ol-measurement-area {
+  /* border-radius: 0 0 2px 2px; */
+}
