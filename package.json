@@ -1,7 +1,8 @@
 {
   "name": "ol-measurement",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -11,7 +12,8 @@
     "url": ""
   },
   "scripts": {
-    "rollup": "rollup -c ./rollup.config.js"
+    "rollup": "rollup -c ./rollup.config.js",
+    "generate:type": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +22,8 @@
   "devDependencies": {
     "rollup": "^4.24.0",
     "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "ol": "^10.2.1"
   }
 }
