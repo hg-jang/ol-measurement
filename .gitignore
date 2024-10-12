@@ -2,8 +2,9 @@
 
 node_modules
 
-/build
-/package
+dist
+build
+package
 
 # env
 .env
