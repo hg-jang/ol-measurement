@@ -1,23 +1,15 @@
-// export type Options = ControlOptions & {
-//   className?: string;
-//   distanceButtonClassName?: string;
-//   areaButtonClassName?: string;
-//   eraserButtonClassName?: string;
-//   distanceButtonLabel?: string | Text | HTMLElement;
-//   areaButtonLabel?: string | Text | HTMLElement;
-//   eraserButtonLabel?: string | Text | HTMLElement;
-//   distanceBtnTipLabel?: string;
-//   areaBtnTipLabel?: string;
-//   eraserBtnTipLabel?: string;
-//   source?: HTMLElement | string;
-//   useDistance?: boolean;
-//   useArea?: boolean;
-//   useEraser?: boolean;
-//   useTooltip?: boolean;
-// };
-
+import { Overlay } from "ol";
 import Control from "ol/control/Control";
 import EventType from "ol/events/EventType";
+import { getArea, getLength } from "ol/sphere";
+import { CLASS_UNSELECTABLE, CLASS_CONTROL } from "ol/css";
+import OverlayPositioning from "ol/OverlayPositioning";
+import Polygon from "ol/geom/Polygon";
+import LineString from "ol/geom/LineString";
+import Draw from "ol/interaction/Draw";
+import { Circle, Fill, Stroke, Style } from "ol/style";
+import { unByKey } from "ol/Observable";
+import GeometryType from "ol/geom/GeometryType";
 
 /**
  * @typedef {Object} Options
@@ -31,11 +23,11 @@ import EventType from "ol/events/EventType";
  * @property {string} [distanceBtnTipLabel]
  * @property {string} [areaBtnTipLabel]
  * @property {string} [eraserBtnTipLabel]
- * @property {} [source]
  * @property {boolean} [useDistance]
  * @property {boolean} [useArea]
  * @property {boolean} [useEraser]
  * @property {boolean} [useTooltip]
+ * @property {string} [layerId='measurement-layer'] measurement layer id.
  */
 /**
  * @classdesc
@@ -148,16 +140,25 @@ class Measurement extends Control {
   _status = "none";
 
   /**
+   * @private
+   * @type {string}
+   */
+  _layerId;
+
+  /**
    *
-   * @param {Options} options
+   * @param {import("ol/control/Control").Options & Options} options
    */
   constructor(options) {
+    // @ts-ignore
     options = options ? options : {};
 
     super({
       element: document.createElement("div"),
       target: options.target,
     });
+
+    this._layerId = options.layerId || "measurement-layer";
 
     this._useDistance =
       options.useDistance !== undefined ? options.useDistance : true;
@@ -229,7 +230,7 @@ class Measurement extends Control {
       this._distanceButton.appendChild(mdLabelNode);
       this._distanceButton.addEventListener(
         EventType.CLICK,
-        this.handleMdClick_.bind(this),
+        this._handleMdClick.bind(this),
         false
       );
     }
@@ -243,7 +244,7 @@ class Measurement extends Control {
       // @ts-ignore
       this._areaButton.addEventListener(
         EventType.CLICK,
-        this.handleMaClick_.bind(this),
+        this._handleMaClick.bind(this),
         false
       );
     }
@@ -276,13 +277,14 @@ class Measurement extends Control {
       this._helpTooltip = new Overlay({
         element: this._helpTooltipElement,
         offset: [15, 0],
-        positioning: "center-left",
+        positioning: OverlayPositioning.CENTER_LEFT,
       });
     }
   }
 
   /**
    * 거리 측정 버튼 클릭
+   * @private
    * @param {MouseEvent} evt
    */
   _handleMdClick(evt) {
@@ -321,6 +323,7 @@ class Measurement extends Control {
 
   /**
    * 면적 측정 버튼 클릭
+   * @private
    * @param {MouseEvent} evt
    */
   _handleMaClick(evt) {
@@ -351,7 +354,7 @@ class Measurement extends Control {
         this._helpTooltipElement &&
           this._helpTooltipElement.classList.add("hidden");
       });
-    this.addInteraction_("area");
+    this._addInteraction("area");
     this._status = "area_measureing";
     this._distanceButton.classList.remove("active");
     this._areaButton.classList.add("active");
@@ -360,10 +363,11 @@ class Measurement extends Control {
 
   /**
    * 지우개 버튼 클릭
+   * @private
    */
   _handleEraserClick() {
     // erase features
-    const layer = getLayerById(this.getMap(), LAYER_ID.measurement);
+    const layer = this._getLayer(this._layerId);
     layer.getSource().clear();
     // const features = layer.getSource()?.getFeatures();
     // if (features) {
@@ -408,6 +412,7 @@ class Measurement extends Control {
 
   /**
    * Format length output.
+   * @private
    * @param {import ('ol/geom/LineString').default} line
    */
   _formatLength(line) {
@@ -443,9 +448,10 @@ class Measurement extends Control {
    * @param {'distance' | 'area'} measureType
    */
   _addInteraction(measureType) {
-    const type = measureType === "area" ? "Polygon" : "LineString";
+    const type =
+      measureType === "area" ? GeometryType.POLYGON : GeometryType.LINE_STRING;
     const map = this.getMap();
-    const source = getLayerById(map, LAYER_ID.measurement).getSource();
+    const source = this._getLayer(this._layerId).getSource();
 
     this._draw = new Draw({
       source: source,
@@ -459,7 +465,7 @@ class Measurement extends Control {
           lineDash: [10, 10],
           width: 2,
         }),
-        image: new CircleStyle({
+        image: new Circle({
           radius: 5,
           stroke: new Stroke({
             color: "rgba(0, 0, 0, 0.7)",
@@ -472,7 +478,7 @@ class Measurement extends Control {
     });
     map.addInteraction(this._draw);
 
-    this.createMeasureTooltip_();
+    this._createMeasureTooltip();
     this._useTooltip && this._createHelpTooltip();
 
     let listener;
@@ -480,6 +486,7 @@ class Measurement extends Control {
       // set sketch
       this._sketch = evt.feature;
 
+      // @ts-ignore
       let tooltipCoord = evt.coordinate;
 
       listener = this._sketch.getGeometry().on("change", (evt) => {
@@ -504,7 +511,7 @@ class Measurement extends Control {
       this._sketch = null;
       // unset tooltip so that a new one can be created
       this._measureTooltipElement = null;
-      this.createMeasureTooltip_();
+      this._createMeasureTooltip();
       unByKey(listener);
     });
   }
@@ -522,13 +529,14 @@ class Measurement extends Control {
     this._helpTooltip = new Overlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
-      positioning: "center-left",
+      positioning: OverlayPositioning.CENTER_LEFT,
     });
     this.getMap().addOverlay(this._helpTooltip);
   }
 
   /**
    * Creates a new measure tooltip
+   * @private
    */
   _createMeasureTooltip() {
     if (this._measureTooltipElement) {
@@ -541,11 +549,25 @@ class Measurement extends Control {
     this._measureTooltip = new Overlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
-      positioning: "bottom-center",
+      positioning: OverlayPositioning.BOTTOM_CENTER,
       stopEvent: false,
       insertFirst: false,
     });
     this.getMap().addOverlay(this._measureTooltip);
+  }
+
+  /**
+   * get layer by id
+   * @private
+   * @param {string} id
+   */
+  _getLayer(id) {
+    return /** @type {import('ol/layer/Vector').default} */ (
+      this.getMap()
+        .getLayers()
+        .getArray()
+        .find((layer) => layer.get("id") === id)
+    );
   }
 }
 
