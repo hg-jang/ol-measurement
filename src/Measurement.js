@@ -189,15 +189,15 @@ class Measurement extends Control {
     const distanceButtonLabel =
       options.distanceButtonLabel !== undefined
         ? options.distanceButtonLabel
-        : "\u003D";
+        : (document.createElement("img").src = "../assets/polyline.svg");
     const areaButtonLabel =
       options.areaButtonLabel !== undefined
         ? options.areaButtonLabel
-        : "\u2260";
+        : (document.createElement("img").src = "../assets/polygon.svg");
     const eraserButtonLabel =
       options.eraserButtonLabel !== undefined
         ? options.eraserButtonLabel
-        : "\u00D7";
+        : (document.createElement("img").src = "../assets/eraser.svg");
 
     const distanceBtnTipLabel = options.distanceBtnTipLabel
       ? options.distanceBtnTipLabel
