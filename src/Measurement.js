@@ -8,7 +8,6 @@ import LineString from "ol/geom/LineString";
 import Draw from "ol/interaction/Draw";
 import { Circle, Fill, Stroke, Style } from "ol/style";
 import { unByKey } from "ol/Observable";
-import GeometryType from "ol/geom/GeometryType";
 
 /**
  * @typedef {Object} Options
@@ -149,7 +148,6 @@ class Measurement extends Control {
    * @param {import("ol/control/Control").Options & Options} options
    */
   constructor(options) {
-    // @ts-ignore
     options = options ? options : {};
 
     super({
@@ -240,7 +238,6 @@ class Measurement extends Control {
       this._areaButton.className = areaButtonClassName;
       this._areaButton.setAttribute("type", "button");
       this._areaButton.appendChild(maLabelNode);
-      // @ts-ignore
       this._areaButton.addEventListener(
         EventType.CLICK,
         this._handleMaClick.bind(this),
@@ -276,7 +273,6 @@ class Measurement extends Control {
       this._helpTooltip = new Overlay({
         element: this._helpTooltipElement,
         offset: [15, 0],
-        // @ts-ignore
         positioning: "center-left",
       });
     }
@@ -448,8 +444,7 @@ class Measurement extends Control {
    * @param {'distance' | 'area'} measureType
    */
   _addInteraction(measureType) {
-    const type =
-      measureType === "area" ? GeometryType.POLYGON : GeometryType.LINE_STRING;
+    const type = measureType === "area" ? "Polygon" : "LineString";
     const map = this.getMap();
     const source = this._getLayer(this._layerId).getSource();
 
@@ -486,7 +481,6 @@ class Measurement extends Control {
       // set sketch
       this._sketch = evt.feature;
 
-      // @ts-ignore
       let tooltipCoord = evt.coordinate;
 
       listener = this._sketch.getGeometry().on("change", (evt) => {
@@ -529,7 +523,6 @@ class Measurement extends Control {
     this._helpTooltip = new Overlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
-      // @ts-ignore
       positioning: "center-left",
     });
     this.getMap().addOverlay(this._helpTooltip);
@@ -550,7 +543,6 @@ class Measurement extends Control {
     this._measureTooltip = new Overlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
-      // @ts-ignore
       positioning: "bottom-center",
       stopEvent: false,
       insertFirst: false,
