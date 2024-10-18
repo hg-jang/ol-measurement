@@ -3,7 +3,6 @@ import Control from "ol/control/Control";
 import EventType from "ol/events/EventType";
 import { getArea, getLength } from "ol/sphere";
 import { CLASS_UNSELECTABLE, CLASS_CONTROL } from "ol/css";
-import OverlayPositioning from "ol/OverlayPositioning";
 import Polygon from "ol/geom/Polygon";
 import LineString from "ol/geom/LineString";
 import Draw from "ol/interaction/Draw";
@@ -277,7 +276,8 @@ class Measurement extends Control {
       this._helpTooltip = new Overlay({
         element: this._helpTooltipElement,
         offset: [15, 0],
-        positioning: OverlayPositioning.CENTER_LEFT,
+        // @ts-ignore
+        positioning: "center-left",
       });
     }
   }
@@ -529,7 +529,8 @@ class Measurement extends Control {
     this._helpTooltip = new Overlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
-      positioning: OverlayPositioning.CENTER_LEFT,
+      // @ts-ignore
+      positioning: "center-left",
     });
     this.getMap().addOverlay(this._helpTooltip);
   }
@@ -549,7 +550,8 @@ class Measurement extends Control {
     this._measureTooltip = new Overlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
-      positioning: OverlayPositioning.BOTTOM_CENTER,
+      // @ts-ignore
+      positioning: "bottom-center",
       stopEvent: false,
       insertFirst: false,
     });
