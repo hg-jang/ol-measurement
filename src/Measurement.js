@@ -14,7 +14,7 @@ import GeometryType from "ol/geom/GeometryType";
 /**
  * @typedef {Object} Options
  * @property {string} [className] name.
- * @property {string} distanceButtonClassName name.
+ * @property {string} [distanceButtonClassName] name.
  * @property {string} [areaButtonClassName]
  * @property {string} [eraserButtonClassName]
  * @property {string | HTMLElement} [distanceButtonLabel]
