@@ -1,6 +1,12 @@
 # ol-measurement
 
-A custom `Control` library for line/area measurements using [`ol`](https://github.com/openlayers/openlayers).
+A custom `Control` library for line/area measurements using [`openlayers`](https://github.com/openlayers/openlayers).
+
+# Installation
+
+```sh
+$ npm i ol-measurement
+```
 
 # Getting Started
 
