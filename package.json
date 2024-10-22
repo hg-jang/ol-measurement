@@ -1,6 +1,6 @@
 {
   "name": "ol-measurement",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -19,11 +19,18 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "files": [
+    "assets",
+    "assets/polygon.svg"
+  ],
   "devDependencies": {
+    "@rollup/plugin-image": "^3.0.3",
     "rollup": "^4.24.0",
+    "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@types/ol": "^6.5.3",
     "ol": "^10.2.1"
   }
 }
