@@ -1,6 +1,12 @@
 {
   "name": "ol-measurement",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "description": "A custom Control library for line/area measurements using openlayers",
+  "keywords": [
+    "ol",
+    "openlayers",
+    "measurement"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -15,18 +21,15 @@
     "rollup": "rollup -c ./rollup.config.js",
     "generate:type": "tsc"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@rollup/plugin-image": "^3.0.3",
     "rollup": "^4.24.0",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.6.2"
   },
-  "dependencies": {
-    "@types/ol": "^6.5.3",
-    "ol": "^10.2.1"
+  "peerDependencies": {
+    "ol": ">=6.0.0"
   }
 }
