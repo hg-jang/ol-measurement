@@ -19,5 +19,10 @@ cypress.json
 jest.config.js
 tsconfig.json
 .prettierrc
+
+# rollup
 rollup.config.js
 rollup.min.config.js
+
+# assets
+assets
