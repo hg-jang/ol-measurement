@@ -1,6 +1,6 @@
 {
   "name": "ol-measurement",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A custom Control library for line/area measurements using openlayers",
   "keywords": [
     "ol",
