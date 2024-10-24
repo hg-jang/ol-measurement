@@ -1,6 +1,6 @@
 {
   "name": "ol-measurement",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A custom Control library for line/area measurements using openlayers",
   "keywords": [
     "ol",
@@ -30,6 +30,6 @@
     "typescript": "^5.6.2"
   },
   "peerDependencies": {
-    "ol": ">=6.0.0"
+    "ol": ">=9.0.0"
   }
 }
